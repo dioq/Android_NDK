@@ -39,53 +39,75 @@ JNIEXPORT jint JNICALL getVersionCode(JNIEnv *env, jclass clazz) {
 }
 
 // 动态注册Native方法
-JNIEXPORT jstring JNICALL getVersion(JNIEnv *env, jclass arg, jint code){
+JNIEXPORT jstring JNICALL getVersion(JNIEnv *env, jclass arg, jint code) {
     string tmp = to_string(code);
     string version = "5." + tmp + ".3";
     return env->NewStringUTF(version.c_str());
 }
 
-//C调用Java方法（带参数带返回值）
-void callStringFromJava(){
+/**
+ * C调用Java方法（带参数不带返回值）
+ */
+void callVoidFromJava() {
     JNIEnv *env;
     j_vm->AttachCurrentThread(&env, NULL);
-    jmethodID methodid = env->GetStaticMethodID(j_class,"getStringToC","(Ljava/lang/String;)Ljava/lang/String;");
-    jstring str = (jstring)env->CallStaticObjectMethod(j_class, methodid,env->NewStringUTF("C-Name"));
-    char* java = (char*)env->GetStringUTFChars(str, NULL);
-    printf("%s",java);
+    jmethodID methodid = env->GetStaticMethodID(j_class, "getVoidToC", "(ILjava/lang/String;)V");
+    env->CallStaticVoidMethod(j_class, methodid, 10, env->NewStringUTF("C-Name not return"));
+}
+
+//C调用Java方法（带参数带返回值）
+void callStringFromJava() {
+    JNIEnv *env;
+    j_vm->AttachCurrentThread(&env, NULL);
+    jmethodID methodid = env->GetStaticMethodID(j_class, "getStringToC",
+                                                "(Ljava/lang/String;)Ljava/lang/String;");
+    jstring str = (jstring) env->CallStaticObjectMethod(j_class, methodid,
+                                                        env->NewStringUTF("C-Name with return"));
+//    return str;
+    char *java = (char *) env->GetStringUTFChars(str, NULL);
+    printf("native-lib.cpp : %s", java);
 }
 //动态注册的Native方法，然后调用Java方法
 JNIEXPORT void JNICALL callJavaString(JNIEnv *env, jclass arg) {
     callStringFromJava();
 }
 
+//动态注册的Native方法，然后调用Java方法
+JNIEXPORT void JNICALL callJavaVoid(JNIEnv *env, jclass arg) {
+    callVoidFromJava();
+}
+
 
 //C++里方法绑定
 static JNINativeMethod g_methods[] = {
-        {"getVersionCode", "()I", (void *) getVersionCode},
-        {"getVersion", "(I)Ljava/lang/String;", (void*)getVersion},
-        {"callJavaString", "()V", (void*)callJavaString}
+        {"getVersionCode", "()I",                   (void *) getVersionCode},
+        {"getVersion",     "(I)Ljava/lang/String;", (void *) getVersion},
+        {"callJavaVoid",   "()V",                   (void *) callJavaVoid},
+        {"callJavaString", "()V",                   (void *) callJavaString}
 };
 
-static int registerNativeMethods(JNIEnv* env, const char* className, const JNINativeMethod* gMethods, int numMethods){
+static int
+registerNativeMethods(JNIEnv *env, const char *className, const JNINativeMethod *gMethods,
+                      int numMethods) {
     jclass clazz;
     clazz = env->FindClass(className);
 
-    if(clazz == NULL){
+    if (clazz == NULL) {
         return -1;
     }
 
-    j_class = (jclass)env-> NewGlobalRef((jobject)clazz);
+    j_class = (jclass) env->NewGlobalRef((jobject) clazz);
 
-    if(env->RegisterNatives(clazz, gMethods, numMethods) < 0){
+    if (env->RegisterNatives(clazz, gMethods, numMethods) < 0) {
         return -1;
     }
 
     return 0;
 }
 
-static int registerNative(JNIEnv* env){
-    return registerNativeMethods(env, JNI_REG_CLASS, g_methods, sizeof(g_methods)/ sizeof(g_methods[0]));
+static int registerNative(JNIEnv *env) {
+    return registerNativeMethods(env, JNI_REG_CLASS, g_methods,
+                                 sizeof(g_methods) / sizeof(g_methods[0]));
 }
 
 // must define this function
@@ -105,7 +127,7 @@ JNIEXPORT int JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
         return JNI_ERR;
     }
 
-    if(registerNative(env) != JNI_OK){
+    if (registerNative(env) != JNI_OK) {
         return -1;
     }
 

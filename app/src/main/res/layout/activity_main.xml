@@ -47,7 +47,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="click5"
-        android:text="动态注册Native方法，并且C回调Java方法"
+        android:text="C调用Java方法，带参数不带返回值"
+        android:textSize="15sp" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="click6"
+        android:text="C回调Java方法，带参数带返回值"
         android:textSize="15sp" />
 
 </LinearLayout>
