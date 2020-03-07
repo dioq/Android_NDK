@@ -68,7 +68,7 @@ void callVoidFromJava() {
 }
 
 // C调用Java方法（带参数带返回值）
-void callStringFromJava() {
+char *callStringFromJava() {
     JNIEnv *env;
     j_vm->AttachCurrentThread(&env, NULL);
     jmethodID methodid = env->GetStaticMethodID(j_class, "getStringToC",
@@ -77,13 +77,17 @@ void callStringFromJava() {
                                                          env->NewStringUTF("C-Name with return"));
 
     char *java = (char *) env->GetStringUTFChars(jstr, NULL);
+    char* addChar =" || cross callStringFromJava";
+    strcat(java, addChar); //拼接两个字符串
     if (debug == 1) {
         LOGE("callStringFromJava  ============== Java To C : %s", java);
     }
+    return java;
 }
 //动态注册的Native方法，然后调用Java方法
-JNIEXPORT void JNICALL callJavaString(JNIEnv *env, jclass arg) {
-    callStringFromJava();
+JNIEXPORT jstring JNICALL callJavaString(JNIEnv *env, jclass arg) {
+    char *result = callStringFromJava();
+    return env->NewStringUTF(result);
 }
 
 //动态注册的Native方法，然后调用Java方法
@@ -97,7 +101,7 @@ static JNINativeMethod g_methods[] = {
         {"getVersionCode", "()I",                   (void *) getVersionCode},
         {"getVersion",     "(I)Ljava/lang/String;", (void *) getVersion},
         {"callJavaVoid",   "()V",                   (void *) callJavaVoid},
-        {"callJavaString", "()V",                   (void *) callJavaString}
+        {"callJavaString", "()Ljava/lang/String;",  (void *) callJavaString}
 };
 
 static int

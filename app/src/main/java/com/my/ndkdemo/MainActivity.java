@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
     // 动态注册Native方法，并且C回调Java方法
     public void click6(View view) {
-        NDKUtil.callJavaString();
-        tv.setText("带参数带返回值");
+        String resutl = NDKUtil.callJavaString();
+        tv.setText("带参数带返回值:" + resutl);
     }
 }

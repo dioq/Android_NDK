@@ -10,7 +10,7 @@
         android:id="@+id/textViewId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:height="30dp"
+        android:height="45dp"
         android:background="#F00"
         android:hint="显示结果"
         android:textSize="15sp" />
@@ -47,14 +47,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="click5"
-        android:text="C调用Java方法，带参数不带返回值"
+        android:text="C调用Java方法（带参数不带返回值）"
         android:textSize="15sp" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="click6"
-        android:text="C回调Java方法，带参数带返回值"
+        android:text="C调用Java方法（带参数带返回值）"
         android:textSize="15sp" />
 
 </LinearLayout>
