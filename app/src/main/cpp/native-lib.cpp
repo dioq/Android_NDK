@@ -1,9 +1,5 @@
 #include <jni.h>
 #include <string>
-#include <pthread.h>
-#include <signal.h>
-#include <unistd.h>
-#include <stdlib.h>
 #include <android/log.h>
 #include "common.h"
 
