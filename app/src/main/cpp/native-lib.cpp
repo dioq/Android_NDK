@@ -37,16 +37,15 @@ Java_com_my_ndkdemo_NDKUtil_setJNILogEnable(JNIEnv *env, jclass clazz, jint type
 JNIEXPORT jint JNICALL getVersionCode(JNIEnv *env, jclass clazz) {
     return 42;
 }
+
 // 动态注册Native方法
 JNIEXPORT jstring JNICALL getVersion(JNIEnv *env, jclass arg, jint code){
     string tmp = to_string(code);
     string version = "5." + tmp + ".3";
     return env->NewStringUTF(version.c_str());
 }
-/*
-*//**
- * C调用Java方法（带参数带返回值）
- *//*
+
+//C调用Java方法（带参数带返回值）
 void callStringFromJava(){
     JNIEnv *env;
     j_vm->AttachCurrentThread(&env, NULL);
@@ -55,22 +54,17 @@ void callStringFromJava(){
     char* java = (char*)env->GetStringUTFChars(str, NULL);
     printf("%s",java);
 }
-
-*//**
- * 动态注册的Native方法，然后调用Java方法
- * @param env
- * @param arg
- *//*
+//动态注册的Native方法，然后调用Java方法
 JNIEXPORT void JNICALL callJavaString(JNIEnv *env, jclass arg) {
     callStringFromJava();
-}*/
+}
 
 
 //C++里方法绑定
 static JNINativeMethod g_methods[] = {
         {"getVersionCode", "()I", (void *) getVersionCode},
         {"getVersion", "(I)Ljava/lang/String;", (void*)getVersion},
-//        {"callJavaString", "()V", (void*)callJavaString}
+        {"callJavaString", "()V", (void*)callJavaString}
 };
 
 static int registerNativeMethods(JNIEnv* env, const char* className, const JNINativeMethod* gMethods, int numMethods){

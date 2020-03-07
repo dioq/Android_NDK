@@ -45,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
 
     // 动态注册Native方法，并且C回调Java方法
     public void click5(View view) {
-//        NDKUtil.callJavaString();
-//        tv.setText("动态注册Native方法，并且C回调Java方法");
+        NDKUtil.callJavaString();
+        tv.setText("动态注册Native方法，并且C回调Java方法");
     }
 
 }

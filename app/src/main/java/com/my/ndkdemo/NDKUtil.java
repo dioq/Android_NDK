@@ -12,7 +12,7 @@ public class NDKUtil {
     public native static String getVersion(int code);
 
     // 动态注册Native方法，并且C回调Java方法
-//    public native static void callJavaString();
+    public native static void callJavaString();
 
 
     // C调用Java方法（带返回值）
