@@ -4,7 +4,8 @@
 #include <signal.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <iostream>
+#include <android/log.h>
+#include "common.h"
 
 using namespace std;
 
@@ -18,7 +19,7 @@ extern "C"
 JNIEXPORT jstring JNICALL
 Java_com_my_ndkdemo_NDKUtil_stringFromJNI(JNIEnv *env, jclass clazz) {
     // TODO: implement stringFromJNI()
-    string hello = "静态注册Native方法：无参数 ";
+    string hello = "have no param, with return";
     return env->NewStringUTF(hello.c_str());
 }
 
@@ -27,45 +28,62 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_com_my_ndkdemo_NDKUtil_setJNILogEnable(JNIEnv *env, jclass clazz, jint type) {
     // TODO: implement setJNILogEnable()
-    printf("你传的参数是:%d", type);
+    if (type == 1) {
+        debug = 1;
+    } else {
+        debug = 0;
+    }
+    if (debug == 1) {
+        LOGE("你传入的 type = %d, 有日志", type);
+    }
 }
 
 /************************************************ 以下是动态注册方法 *************************************************/
 #define JNI_REG_CLASS "com/my/ndkdemo/NDKUtil" // path of Java file
 
-//动态注册的Native方法
+//动态注册的Native方法（无参数，有返回值）
 JNIEXPORT jint JNICALL getVersionCode(JNIEnv *env, jclass clazz) {
-    return 42;
+    if (debug == 1) {
+        LOGE("动态注册的Native方法（无参数，有返回值） ===============  getVersionCode ----------- 10");
+    }
+    return 10;
 }
 
-// 动态注册Native方法
+// 动态注册Native方法（有参数，有返回值）
 JNIEXPORT jstring JNICALL getVersion(JNIEnv *env, jclass arg, jint code) {
+    if (debug == 1) {
+        LOGE("动态注册Native方法（有参数，有返回值）  ===============    版本首位是5 末位是 3");
+    }
     string tmp = to_string(code);
     string version = "5." + tmp + ".3";
     return env->NewStringUTF(version.c_str());
 }
 
-/**
- * C调用Java方法（带参数不带返回值）
- */
+
+// C调用Java方法（带参数不带返回值）
 void callVoidFromJava() {
     JNIEnv *env;
     j_vm->AttachCurrentThread(&env, NULL);
     jmethodID methodid = env->GetStaticMethodID(j_class, "getVoidToC", "(ILjava/lang/String;)V");
     env->CallStaticVoidMethod(j_class, methodid, 10, env->NewStringUTF("C-Name not return"));
+    if (debug == 1) {
+        LOGE("callVoidFromJava  ================ Java To C");
+    }
 }
 
-//C调用Java方法（带参数带返回值）
+// C调用Java方法（带参数带返回值）
 void callStringFromJava() {
     JNIEnv *env;
     j_vm->AttachCurrentThread(&env, NULL);
     jmethodID methodid = env->GetStaticMethodID(j_class, "getStringToC",
                                                 "(Ljava/lang/String;)Ljava/lang/String;");
-    jstring str = (jstring) env->CallStaticObjectMethod(j_class, methodid,
-                                                        env->NewStringUTF("C-Name with return"));
-//    return str;
-    char *java = (char *) env->GetStringUTFChars(str, NULL);
-    printf("native-lib.cpp : %s", java);
+    jstring jstr = (jstring) env->CallStaticObjectMethod(j_class, methodid,
+                                                         env->NewStringUTF("C-Name with return"));
+
+    char *java = (char *) env->GetStringUTFChars(jstr, NULL);
+    if (debug == 1) {
+        LOGE("callStringFromJava  ============== Java To C : %s", java);
+    }
 }
 //动态注册的Native方法，然后调用Java方法
 JNIEXPORT void JNICALL callJavaString(JNIEnv *env, jclass arg) {

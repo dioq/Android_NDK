@@ -28,13 +28,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void click2(View view) {
-        NDKUtil.setJNILogEnable(2);
-        tv.setText("你的参数:" + 2);
+        NDKUtil.setJNILogEnable(1);
+        tv.setText("type为1有日志，为0无日志");
     }
 
     public void click3(View view) {
-        int type = NDKUtil.getVersionCode();
-        tv.setText("动态注册的Native方法 type = " + type);
+        int verison = NDKUtil.getVersionCode();
+        tv.setText("verison = " + verison);
     }
 
     //动态注册的Native方法 有参数有返回值
