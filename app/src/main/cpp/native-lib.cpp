@@ -10,7 +10,7 @@ static jclass j_class = NULL;
 
 static jint debug = 1;
 
-//静态注册Native方法：无参数
+//静态注册Native方法：无参数,有返回值
 extern "C"
 JNIEXPORT jstring JNICALL
 Java_com_my_ndkdemo_NDKUtil_stringFromJNI(JNIEnv *env, jclass clazz) {

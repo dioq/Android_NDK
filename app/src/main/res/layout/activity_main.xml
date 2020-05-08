@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="click1"
-        android:text="静态注册Native方法,无参数"
+        android:text="静态注册Native方法,无参数有返回值"
         android:textSize="15sp" />
 
     <Button
