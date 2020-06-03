@@ -10,6 +10,13 @@ static jclass j_class = NULL;
 
 static jint debug = 1;
 
+
+//这种方法是最早加载的，比JIN_Onload更早,JIN_Onload是由系统调用的。静态注册的函数是在java层调用时才执行
+__attribute__((constructor)) void firstGoHere(){
+    LOGE("Go here before JIN_Onload : %d", 99);
+};
+
+
 //静态注册Native方法：无参数,有返回值
 extern "C"
 JNIEXPORT jstring JNICALL
@@ -77,7 +84,7 @@ char *callStringFromJava() {
                                                          env->NewStringUTF("C-Name with return"));
 
     char *java = (char *) env->GetStringUTFChars(jstr, NULL);
-    char* addChar =" || cross callStringFromJava";
+    char *addChar = " || cross callStringFromJava";
     strcat(java, addChar); //拼接两个字符串
     if (debug == 1) {
         LOGE("callStringFromJava  ============== Java To C : %s", java);
