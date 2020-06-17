@@ -53,7 +53,7 @@ JNIEXPORT jint JNICALL getVersionCode(JNIEnv *env, jclass clazz) {
 }
 
 // 动态注册Native方法（有参数，有返回值）
-JNIEXPORT jstring JNICALL getVersion(JNIEnv *env, jclass arg, jint code) {
+JNIEXPORT jstring JNICALL getVersion(JNIEnv *env, jclass clazz, jint code) {
     if (debug == 1) {
         LOGE("动态注册Native方法（有参数，有返回值）  ===============    版本首位是5 末位是 3");
     }
@@ -92,13 +92,13 @@ char *callStringFromJava() {
     return java;
 }
 //动态注册的Native方法，然后调用Java方法
-JNIEXPORT jstring JNICALL callJavaString(JNIEnv *env, jclass arg) {
+JNIEXPORT jstring JNICALL callJavaString(JNIEnv *env, jclass clazz) {
     char *result = callStringFromJava();
     return env->NewStringUTF(result);
 }
 
 //动态注册的Native方法，然后调用Java方法
-JNIEXPORT void JNICALL callJavaVoid(JNIEnv *env, jclass arg) {
+JNIEXPORT void JNICALL callJavaVoid(JNIEnv *env, jclass clazz) {
     callVoidFromJava();
 }
 
