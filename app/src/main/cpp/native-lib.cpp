@@ -1,7 +1,6 @@
 #include <jni.h>
 #include <string>
-#include <android/log.h>
-#include "common.h"
+#include "Util.h"
 
 using namespace std;
 
@@ -12,7 +11,7 @@ static jint debug = 1;
 
 
 //这种方法是最早加载的，比JIN_Onload更早,JIN_Onload是由系统调用的。静态注册的函数是在java层调用时才执行
-__attribute__((constructor)) void firstGoHere(){
+__attribute__((constructor)) void firstGoHere() {
     LOGE("Go here before JIN_Onload : %d", 99);
 };
 
