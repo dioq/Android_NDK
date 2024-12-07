@@ -1,6 +1,6 @@
 #include <jni.h>
 #include <string>
-#include "Util.h"
+#include "log.h"
 
 using namespace std;
 
@@ -152,7 +152,7 @@ JNIEXPORT int JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
     }
 
     if (registerNative(env) != JNI_OK) {
-        return -1;
+        return JNI_ERR;
     }
 
     j_vm = vm;
